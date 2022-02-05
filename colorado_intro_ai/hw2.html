@@ -58,33 +58,6 @@
 <h3 id="all-classes-needed-for-hw2-are-in-this-submodule">All classes needed for HW2 are in this submodule</h3>
 
 <p>The main class you will be accessing is <code><a href="hw2/robot.html">colorado_intro_ai.hw2.robot</a></code></p>
-
-<p>name: Documentation</p>
-
-<p>on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]</p>
-
-<p>jobs:
-  Deploy-To-Doc-Repo:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v2
-      - run: pdoc -o ./docs ./colorado_intro_ai
-      - name: Push documentation to coloradointroai.github.io
-        uses: cpina/github-action-push-to-another-repository@v1.4.1
-        env: 
-          API_TOKEN_GITHUB: ${{secrets.API_TOKEN_GITHUB }}
-        with:
-          source-directory: 'docs/'
-          destination-github-username: 'coloradointroai'
-          destination-repository-name: 'coloradointroai.github.io'
-          user-email: coloradointroai@gmail.com
-          commit-message: See ORIGIN_COMMIT from $GITHUB_REF
-          target-branch: main</p>
 </div>
 
                         <details>
@@ -97,32 +70,6 @@
 
 <span class="sd">The main class you will be accessing is `colorado_intro_ai.hw2.robot`</span>
 <span class="sd"> </span>
-<span class="sd"> name: Documentation</span>
-
-<span class="sd">on:</span>
-<span class="sd">  push:</span>
-<span class="sd">    branches: [ main ]</span>
-<span class="sd">  pull_request:</span>
-<span class="sd">    branches: [ main ]</span>
-
-<span class="sd">jobs:</span>
-<span class="sd">  Deploy-To-Doc-Repo:</span>
-<span class="sd">    runs-on: ubuntu-latest</span>
-<span class="sd">    steps:</span>
-<span class="sd">      - name: Check out repository code</span>
-<span class="sd">        uses: actions/checkout@v2</span>
-<span class="sd">      - run: pdoc -o ./docs ./colorado_intro_ai</span>
-<span class="sd">      - name: Push documentation to coloradointroai.github.io</span>
-<span class="sd">        uses: cpina/github-action-push-to-another-repository@v1.4.1</span>
-<span class="sd">        env: </span>
-<span class="sd">          API_TOKEN_GITHUB: ${{secrets.API_TOKEN_GITHUB }}</span>
-<span class="sd">        with:</span>
-<span class="sd">          source-directory: &#39;docs/&#39;</span>
-<span class="sd">          destination-github-username: &#39;coloradointroai&#39;</span>
-<span class="sd">          destination-repository-name: &#39;coloradointroai.github.io&#39;</span>
-<span class="sd">          user-email: coloradointroai@gmail.com</span>
-<span class="sd">          commit-message: See ORIGIN_COMMIT from $GITHUB_REF</span>
-<span class="sd">          target-branch: main</span>
 
 <span class="sd"> &#39;&#39;&#39;</span>
 </pre></div>
