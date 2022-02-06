@@ -37,6 +37,12 @@
                                 <a class="function" href="#PathSolver.__init__">PathSolver</a>
                         </li>
                         <li>
+                                <a class="function" href="#PathSolver.path">path</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#PathSolver.pathcost">pathcost</a>
+                        </li>
+                        <li>
                                 <a class="function" href="#PathSolver.breadth_first_search">breadth_first_search</a>
                         </li>
                         <li>
@@ -76,12 +82,11 @@
                     <h1 class="modulename">
 <a href="./../../colorado_intro_ai.html">colorado_intro_ai</a><wbr>.<a href="./../hw2.html">hw2</a><wbr>.pathSolver    </h1>
 
-                        <div class="docstring"><p>Class PathSolver</p>
-</div>
-
+                
                         <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+            <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd"> Class PathSolver</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -96,11 +101,50 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create PathSolver&quot;&quot;&quot;</span>
 
-    
-    <span class="k">def</span> <span class="nf">breadth_first_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 1.a: you need to implement this function&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span> 
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        `previous` is a dictionary chaining together the predecessor state that led to each state</span>
+<span class="sd">        `s` will be None for the initial state</span>
+<span class="sd">        otherwise, start from the last state `s` and recursively trace `previous` back to the initial state,</span>
+<span class="sd">        constructing a list of states visited as we go</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="n">previous</span><span class="p">,</span> <span class="n">previous</span><span class="p">[</span><span class="n">s</span><span class="p">])</span><span class="o">+</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
 
-        <span class="k">return</span>
+    <span class="k">def</span> <span class="nf">pathcost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">step_costs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        add up the step costs along a path, which is assumed to be a list output from the `path` function above</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">cost</span> <span class="o">+=</span> <span class="n">step_costs</span><span class="p">[</span><span class="n">path</span><span class="p">[</span><span class="n">s</span><span class="p">]][</span><span class="n">path</span><span class="p">[</span><span class="n">s</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="k">return</span> <span class="n">cost</span>
+    
+    <span class="c1">#def breadth_first_search(self, edge_weights):</span>
+     <span class="c1">#   &quot;&quot;&quot;Problem 1.a: you need to implement this function&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">breadth_first_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">,</span> <span class="n">return_cost</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; find a shortest sequence of states from start to the goal &#39;&#39;&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;calliing BFS&quot;</span><span class="p">)</span>
+        <span class="n">frontier</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([</span><span class="n">start</span><span class="p">])</span> <span class="c1"># doubly-ended queue of states</span>
+        <span class="n">previous</span> <span class="o">=</span> <span class="p">{</span><span class="n">start</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>  <span class="c1"># start has no previous state; other states will</span>
+        <span class="k">if</span> <span class="n">start</span> <span class="o">==</span> <span class="n">goal</span><span class="p">:</span>
+            <span class="n">path_out</span> <span class="o">=</span> <span class="p">[</span><span class="n">start</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">return_cost</span><span class="p">:</span> <span class="k">return</span> <span class="n">path_out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathcost</span><span class="p">(</span><span class="n">path_out</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">path_out</span>
+        <span class="k">while</span> <span class="n">frontier</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">frontier</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="n">state_graph</span><span class="p">[</span><span class="n">s</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">s2</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">previous</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">s2</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">frontier</span><span class="p">):</span>
+                    <span class="n">frontier</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s2</span><span class="p">)</span>
+                    <span class="n">previous</span><span class="p">[</span><span class="n">s2</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span>
+                    <span class="k">if</span> <span class="n">s2</span> <span class="o">==</span> <span class="n">goal</span><span class="p">:</span>
+                        <span class="n">path_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="n">previous</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">return_cost</span><span class="p">:</span> <span class="k">return</span> <span class="n">path_out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathcost</span><span class="p">(</span><span class="n">path_out</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">path_out</span>
+
 
     <span class="k">def</span> <span class="nf">depth_first_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Problem 1.b: you need to implement this function&quot;&quot;&quot;</span>
@@ -151,11 +195,50 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create PathSolver&quot;&quot;&quot;</span>
 
-    
-    <span class="k">def</span> <span class="nf">breadth_first_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 1.a: you need to implement this function&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span> 
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        `previous` is a dictionary chaining together the predecessor state that led to each state</span>
+<span class="sd">        `s` will be None for the initial state</span>
+<span class="sd">        otherwise, start from the last state `s` and recursively trace `previous` back to the initial state,</span>
+<span class="sd">        constructing a list of states visited as we go</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="n">previous</span><span class="p">,</span> <span class="n">previous</span><span class="p">[</span><span class="n">s</span><span class="p">])</span><span class="o">+</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
 
-        <span class="k">return</span>
+    <span class="k">def</span> <span class="nf">pathcost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">step_costs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        add up the step costs along a path, which is assumed to be a list output from the `path` function above</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">cost</span> <span class="o">+=</span> <span class="n">step_costs</span><span class="p">[</span><span class="n">path</span><span class="p">[</span><span class="n">s</span><span class="p">]][</span><span class="n">path</span><span class="p">[</span><span class="n">s</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="k">return</span> <span class="n">cost</span>
+    
+    <span class="c1">#def breadth_first_search(self, edge_weights):</span>
+     <span class="c1">#   &quot;&quot;&quot;Problem 1.a: you need to implement this function&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">breadth_first_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">,</span> <span class="n">return_cost</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; find a shortest sequence of states from start to the goal &#39;&#39;&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;calliing BFS&quot;</span><span class="p">)</span>
+        <span class="n">frontier</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([</span><span class="n">start</span><span class="p">])</span> <span class="c1"># doubly-ended queue of states</span>
+        <span class="n">previous</span> <span class="o">=</span> <span class="p">{</span><span class="n">start</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>  <span class="c1"># start has no previous state; other states will</span>
+        <span class="k">if</span> <span class="n">start</span> <span class="o">==</span> <span class="n">goal</span><span class="p">:</span>
+            <span class="n">path_out</span> <span class="o">=</span> <span class="p">[</span><span class="n">start</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">return_cost</span><span class="p">:</span> <span class="k">return</span> <span class="n">path_out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathcost</span><span class="p">(</span><span class="n">path_out</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">path_out</span>
+        <span class="k">while</span> <span class="n">frontier</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">frontier</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="n">state_graph</span><span class="p">[</span><span class="n">s</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">s2</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">previous</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">s2</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">frontier</span><span class="p">):</span>
+                    <span class="n">frontier</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s2</span><span class="p">)</span>
+                    <span class="n">previous</span><span class="p">[</span><span class="n">s2</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span>
+                    <span class="k">if</span> <span class="n">s2</span> <span class="o">==</span> <span class="n">goal</span><span class="p">:</span>
+                        <span class="n">path_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="n">previous</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">return_cost</span><span class="p">:</span> <span class="k">return</span> <span class="n">path_out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathcost</span><span class="p">(</span><span class="n">path_out</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">path_out</span>
+
 
     <span class="k">def</span> <span class="nf">depth_first_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Problem 1.b: you need to implement this function&quot;&quot;&quot;</span>
@@ -211,25 +294,100 @@
 
 
                             </div>
+                            <div id="PathSolver.path" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#PathSolver.path">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">path</span><span class="signature">(self, previous, s)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span> 
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        `previous` is a dictionary chaining together the predecessor state that led to each state</span>
+<span class="sd">        `s` will be None for the initial state</span>
+<span class="sd">        otherwise, start from the last state `s` and recursively trace `previous` back to the initial state,</span>
+<span class="sd">        constructing a list of states visited as we go</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="n">previous</span><span class="p">,</span> <span class="n">previous</span><span class="p">[</span><span class="n">s</span><span class="p">])</span><span class="o">+</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p><code>previous</code> is a dictionary chaining together the predecessor state that led to each state
+<code>s</code> will be None for the initial state
+otherwise, start from the last state <code>s</code> and recursively trace <code>previous</code> back to the initial state,
+constructing a list of states visited as we go</p>
+</div>
+
+
+                            </div>
+                            <div id="PathSolver.pathcost" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#PathSolver.pathcost">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">pathcost</span><span class="signature">(self, path, step_costs)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">pathcost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">step_costs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        add up the step costs along a path, which is assumed to be a list output from the `path` function above</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">cost</span> <span class="o">+=</span> <span class="n">step_costs</span><span class="p">[</span><span class="n">path</span><span class="p">[</span><span class="n">s</span><span class="p">]][</span><span class="n">path</span><span class="p">[</span><span class="n">s</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="k">return</span> <span class="n">cost</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>add up the step costs along a path, which is assumed to be a list output from the <code><a href="#PathSolver.path">path</a></code> function above</p>
+</div>
+
+
+                            </div>
                             <div id="PathSolver.breadth_first_search" class="classattr">
                                         <div class="attr function"><a class="headerlink" href="#PathSolver.breadth_first_search">#&nbsp;&nbsp</a>
 
         
             <span class="def">def</span>
-            <span class="name">breadth_first_search</span><span class="signature">(self, edge_weights)</span>:
+            <span class="name">breadth_first_search</span><span class="signature">(self, start: tuple, goal, state_graph, return_cost=False)</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">breadth_first_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 1.a: you need to implement this function&quot;&quot;&quot;</span>
-
-        <span class="k">return</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">breadth_first_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">,</span> <span class="n">return_cost</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; find a shortest sequence of states from start to the goal &#39;&#39;&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;calliing BFS&quot;</span><span class="p">)</span>
+        <span class="n">frontier</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([</span><span class="n">start</span><span class="p">])</span> <span class="c1"># doubly-ended queue of states</span>
+        <span class="n">previous</span> <span class="o">=</span> <span class="p">{</span><span class="n">start</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>  <span class="c1"># start has no previous state; other states will</span>
+        <span class="k">if</span> <span class="n">start</span> <span class="o">==</span> <span class="n">goal</span><span class="p">:</span>
+            <span class="n">path_out</span> <span class="o">=</span> <span class="p">[</span><span class="n">start</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">return_cost</span><span class="p">:</span> <span class="k">return</span> <span class="n">path_out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathcost</span><span class="p">(</span><span class="n">path_out</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">path_out</span>
+        <span class="k">while</span> <span class="n">frontier</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">frontier</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="n">state_graph</span><span class="p">[</span><span class="n">s</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">s2</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">previous</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">s2</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">frontier</span><span class="p">):</span>
+                    <span class="n">frontier</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s2</span><span class="p">)</span>
+                    <span class="n">previous</span><span class="p">[</span><span class="n">s2</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span>
+                    <span class="k">if</span> <span class="n">s2</span> <span class="o">==</span> <span class="n">goal</span><span class="p">:</span>
+                        <span class="n">path_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="n">previous</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">return_cost</span><span class="p">:</span> <span class="k">return</span> <span class="n">path_out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathcost</span><span class="p">(</span><span class="n">path_out</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">path_out</span>
 </pre></div>
 
         </details>
 
-            <div class="docstring"><p>Problem 1.a: you need to implement this function</p>
+            <div class="docstring"><p>find a shortest sequence of states from start to the goal</p>
 </div>
 
 
