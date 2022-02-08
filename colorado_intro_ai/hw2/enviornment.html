@@ -72,12 +72,9 @@
 <span class="kn">import</span> <span class="nn">unittest</span>
 
 <span class="k">class</span> <span class="nc">Environment</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                 <span class="n">goal</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
         <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">start</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">goal</span> <span class="o">=</span> <span class="n">goal</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__create_env</span><span class="p">()</span>
         <span class="c1"># need to set these in particular with special functions that they need to solve</span>
@@ -87,9 +84,28 @@
 
     <span class="k">def</span> <span class="nf">show_env_and_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="n">env_copy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">)</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># if your path solver functions should return [] or [], 0 when no solution is found</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Empty path given to show_env_and_path()&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        
         <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
             <span class="k">if</span><span class="p">(</span><span class="n">env_copy</span><span class="p">[</span><span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">cell</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&gt;=</span> <span class="mi">5</span> <span class="ow">and</span> <span class="n">env_copy</span><span class="p">[</span><span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">cell</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">):</span>
                 <span class="n">env_copy</span><span class="p">[</span><span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">cell</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">41</span>
+
+
+        <span class="c1"># color start node</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">goal</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># start node</span>
+        <span class="n">env_copy</span><span class="p">[</span><span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">35</span>        
+        
+        <span class="c1"># goal node</span>
+        <span class="n">env_copy</span><span class="p">[</span><span class="n">goal</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">goal</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">25</span>
+
+
         <span class="bp">self</span><span class="o">.</span><span class="n">show_env</span><span class="p">(</span><span class="n">env_copy</span><span class="p">)</span>
 
 
@@ -112,14 +128,9 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
     <span class="k">def</span> <span class="nf">__create_env</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">env</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="mi">20</span>
-        <span class="c1">#set robot start position, grey color spot</span>
-        <span class="n">start</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="n">env</span><span class="p">[</span><span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">31</span>
-
-        <span class="c1">#set goal position pink square</span>
-        <span class="n">goal</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
-        <span class="n">env</span><span class="p">[</span><span class="n">goal</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">goal</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">21</span>
         <span class="k">return</span> <span class="n">env</span>
+
+
     <span class="k">def</span> <span class="nf">__set_edge_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># create dictionary</span>
 
@@ -195,12 +206,9 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Environment</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                 <span class="n">goal</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
         <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">start</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">goal</span> <span class="o">=</span> <span class="n">goal</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__create_env</span><span class="p">()</span>
         <span class="c1"># need to set these in particular with special functions that they need to solve</span>
@@ -210,9 +218,28 @@
 
     <span class="k">def</span> <span class="nf">show_env_and_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="n">env_copy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">)</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># if your path solver functions should return [] or [], 0 when no solution is found</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Empty path given to show_env_and_path()&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        
         <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
             <span class="k">if</span><span class="p">(</span><span class="n">env_copy</span><span class="p">[</span><span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">cell</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&gt;=</span> <span class="mi">5</span> <span class="ow">and</span> <span class="n">env_copy</span><span class="p">[</span><span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">cell</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">):</span>
                 <span class="n">env_copy</span><span class="p">[</span><span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">cell</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">41</span>
+
+
+        <span class="c1"># color start node</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">goal</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># start node</span>
+        <span class="n">env_copy</span><span class="p">[</span><span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">35</span>        
+        
+        <span class="c1"># goal node</span>
+        <span class="n">env_copy</span><span class="p">[</span><span class="n">goal</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">goal</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">25</span>
+
+
         <span class="bp">self</span><span class="o">.</span><span class="n">show_env</span><span class="p">(</span><span class="n">env_copy</span><span class="p">)</span>
 
 
@@ -235,14 +262,9 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
     <span class="k">def</span> <span class="nf">__create_env</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">env</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="mi">20</span>
-        <span class="c1">#set robot start position, grey color spot</span>
-        <span class="n">start</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="n">env</span><span class="p">[</span><span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">31</span>
-
-        <span class="c1">#set goal position pink square</span>
-        <span class="n">goal</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
-        <span class="n">env</span><span class="p">[</span><span class="n">goal</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">goal</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">21</span>
         <span class="k">return</span> <span class="n">env</span>
+
+
     <span class="k">def</span> <span class="nf">__set_edge_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># create dictionary</span>
 
@@ -311,22 +333,14 @@
                                         <div class="attr function"><a class="headerlink" href="#Environment.__init__">#&nbsp;&nbsp</a>
 
         
-            <span class="name">Environment</span><span class="signature">(
-    size: tuple = (10, 10),
-    start: tuple = (0, 0),
-    goal: tuple = (8, 9),
-    seed: int = 0
-)</span>
+            <span class="name">Environment</span><span class="signature">(size: tuple = (10, 10), seed: int = 0)</span>
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                 <span class="n">goal</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
         <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">start</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">goal</span> <span class="o">=</span> <span class="n">goal</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__create_env</span><span class="p">()</span>
         <span class="c1"># need to set these in particular with special functions that they need to solve</span>
@@ -352,9 +366,28 @@
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">show_env_and_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="n">env_copy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">)</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># if your path solver functions should return [] or [], 0 when no solution is found</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Empty path given to show_env_and_path()&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        
         <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
             <span class="k">if</span><span class="p">(</span><span class="n">env_copy</span><span class="p">[</span><span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">cell</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&gt;=</span> <span class="mi">5</span> <span class="ow">and</span> <span class="n">env_copy</span><span class="p">[</span><span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">cell</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">):</span>
                 <span class="n">env_copy</span><span class="p">[</span><span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">cell</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">41</span>
+
+
+        <span class="c1"># color start node</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">goal</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># start node</span>
+        <span class="n">env_copy</span><span class="p">[</span><span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">35</span>        
+        
+        <span class="c1"># goal node</span>
+        <span class="n">env_copy</span><span class="p">[</span><span class="n">goal</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">goal</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">25</span>
+
+
         <span class="bp">self</span><span class="o">.</span><span class="n">show_env</span><span class="p">(</span><span class="n">env_copy</span><span class="p">)</span>
 </pre></div>
 

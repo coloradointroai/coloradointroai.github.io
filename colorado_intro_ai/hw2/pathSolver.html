@@ -57,12 +57,6 @@
                         <li>
                                 <a class="function" href="#PathSolver.a_star_manhattan">a_star_manhattan</a>
                         </li>
-                        <li>
-                                <a class="function" href="#PathSolver.a_star_euclidian_probabilty">a_star_euclidian_probabilty</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#PathSolver.a_star_user_defined_h">a_star_user_defined_h</a>
-                        </li>
                 </ul>
 
             </li>
@@ -102,38 +96,43 @@
         <span class="sd">&quot;&quot;&quot;Create PathSolver&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span> 
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        `previous` is a dictionary chaining together the predecessor state that led to each state</span>
+
 <span class="sd">        `s` will be None for the initial state</span>
+
 <span class="sd">        otherwise, start from the last state `s` and recursively trace `previous` back to the initial state,</span>
 <span class="sd">        constructing a list of states visited as we go</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span> 
+        
         <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="n">previous</span><span class="p">,</span> <span class="n">previous</span><span class="p">[</span><span class="n">s</span><span class="p">])</span><span class="o">+</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">pathcost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">step_costs</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        add up the step costs along a path, which is assumed to be a list output from the `path` function above</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;add up the step costs along a path, which is assumed to be a list output from the `path` function above&quot;&quot;&quot;</span>
+        
         <span class="n">cost</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
             <span class="n">cost</span> <span class="o">+=</span> <span class="n">step_costs</span><span class="p">[</span><span class="n">path</span><span class="p">[</span><span class="n">s</span><span class="p">]][</span><span class="n">path</span><span class="p">[</span><span class="n">s</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
         <span class="k">return</span> <span class="n">cost</span>
     
-    <span class="c1">#def breadth_first_search(self, edge_weights):</span>
-     <span class="c1">#   &quot;&quot;&quot;Problem 1.a: you need to implement this function&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">breadth_first_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">,</span> <span class="n">return_cost</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39; find a shortest sequence of states from start to the goal &#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot; find a shortest sequence of states from start to the goal &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;calliing BFS&quot;</span><span class="p">)</span>
+        
         <span class="n">frontier</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([</span><span class="n">start</span><span class="p">])</span> <span class="c1"># doubly-ended queue of states</span>
         <span class="n">previous</span> <span class="o">=</span> <span class="p">{</span><span class="n">start</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>  <span class="c1"># start has no previous state; other states will</span>
+        
+        <span class="c1"># Return on start is goal</span>
         <span class="k">if</span> <span class="n">start</span> <span class="o">==</span> <span class="n">goal</span><span class="p">:</span>
             <span class="n">path_out</span> <span class="o">=</span> <span class="p">[</span><span class="n">start</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">return_cost</span><span class="p">:</span> <span class="k">return</span> <span class="n">path_out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathcost</span><span class="p">(</span><span class="n">path_out</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">path_out</span>
+
+        <span class="c1"># loop through frontine searching nodes until we find a goal</span>
         <span class="k">while</span> <span class="n">frontier</span><span class="p">:</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">frontier</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="n">state_graph</span><span class="p">[</span><span class="n">s</span><span class="p">]:</span>
@@ -144,33 +143,31 @@
                         <span class="n">path_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="n">previous</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">return_cost</span><span class="p">:</span> <span class="k">return</span> <span class="n">path_out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathcost</span><span class="p">(</span><span class="n">path_out</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">)</span>
                         <span class="k">return</span> <span class="n">path_out</span>
+        
+        <span class="c1"># no solution</span>
+        <span class="k">if</span> <span class="n">return_cost</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[],</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="k">return</span> <span class="p">[]</span>
 
 
-    <span class="k">def</span> <span class="nf">depth_first_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 1.b: you need to implement this function&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">depth_first_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">,</span> <span class="n">return_cost</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Problem 2.a: you need to implement this function&quot;&quot;&quot;</span>
 
         <span class="k">return</span>
 
-    <span class="k">def</span> <span class="nf">uniform_cost_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 1.c: you need to implement this function&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">uniform_cost_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">,</span> <span class="n">return_cost</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Problem 2.a: you need to implement this function&quot;&quot;&quot;</span>
 
         <span class="k">return</span>
 
-    <span class="k">def</span> <span class="nf">a_star_euclidian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 2: you need to implement this function&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">a_star_euclidian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">,</span> <span class="n">return_cost</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Problem 2.b: you need to implement this function&quot;&quot;&quot;</span>
         <span class="k">return</span>
 
     
-    <span class="k">def</span> <span class="nf">a_star_manhattan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 3: you need to implement this function&quot;&quot;&quot;</span>
-        <span class="k">return</span>
-    
-    <span class="k">def</span> <span class="nf">a_star_euclidian_probabilty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 4: you need to implement this function&quot;&quot;&quot;</span>
-        <span class="k">return</span>
-
-    <span class="k">def</span> <span class="nf">a_star_user_defined_h</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 5: you need to implement this function&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">a_star_manhattan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">,</span> <span class="n">return_cost</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Problem 2c: you need to implement this function&quot;&quot;&quot;</span>
         <span class="k">return</span>
 </pre></div>
 
@@ -196,38 +193,43 @@
         <span class="sd">&quot;&quot;&quot;Create PathSolver&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span> 
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        `previous` is a dictionary chaining together the predecessor state that led to each state</span>
+
 <span class="sd">        `s` will be None for the initial state</span>
+
 <span class="sd">        otherwise, start from the last state `s` and recursively trace `previous` back to the initial state,</span>
 <span class="sd">        constructing a list of states visited as we go</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span> 
+        
         <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="n">previous</span><span class="p">,</span> <span class="n">previous</span><span class="p">[</span><span class="n">s</span><span class="p">])</span><span class="o">+</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">pathcost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">step_costs</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        add up the step costs along a path, which is assumed to be a list output from the `path` function above</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;add up the step costs along a path, which is assumed to be a list output from the `path` function above&quot;&quot;&quot;</span>
+        
         <span class="n">cost</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
             <span class="n">cost</span> <span class="o">+=</span> <span class="n">step_costs</span><span class="p">[</span><span class="n">path</span><span class="p">[</span><span class="n">s</span><span class="p">]][</span><span class="n">path</span><span class="p">[</span><span class="n">s</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
         <span class="k">return</span> <span class="n">cost</span>
     
-    <span class="c1">#def breadth_first_search(self, edge_weights):</span>
-     <span class="c1">#   &quot;&quot;&quot;Problem 1.a: you need to implement this function&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">breadth_first_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">,</span> <span class="n">return_cost</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39; find a shortest sequence of states from start to the goal &#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot; find a shortest sequence of states from start to the goal &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;calliing BFS&quot;</span><span class="p">)</span>
+        
         <span class="n">frontier</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([</span><span class="n">start</span><span class="p">])</span> <span class="c1"># doubly-ended queue of states</span>
         <span class="n">previous</span> <span class="o">=</span> <span class="p">{</span><span class="n">start</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>  <span class="c1"># start has no previous state; other states will</span>
+        
+        <span class="c1"># Return on start is goal</span>
         <span class="k">if</span> <span class="n">start</span> <span class="o">==</span> <span class="n">goal</span><span class="p">:</span>
             <span class="n">path_out</span> <span class="o">=</span> <span class="p">[</span><span class="n">start</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">return_cost</span><span class="p">:</span> <span class="k">return</span> <span class="n">path_out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathcost</span><span class="p">(</span><span class="n">path_out</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">path_out</span>
+
+        <span class="c1"># loop through frontine searching nodes until we find a goal</span>
         <span class="k">while</span> <span class="n">frontier</span><span class="p">:</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">frontier</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="n">state_graph</span><span class="p">[</span><span class="n">s</span><span class="p">]:</span>
@@ -238,33 +240,31 @@
                         <span class="n">path_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="n">previous</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">return_cost</span><span class="p">:</span> <span class="k">return</span> <span class="n">path_out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathcost</span><span class="p">(</span><span class="n">path_out</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">)</span>
                         <span class="k">return</span> <span class="n">path_out</span>
+        
+        <span class="c1"># no solution</span>
+        <span class="k">if</span> <span class="n">return_cost</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[],</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="k">return</span> <span class="p">[]</span>
 
 
-    <span class="k">def</span> <span class="nf">depth_first_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 1.b: you need to implement this function&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">depth_first_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">,</span> <span class="n">return_cost</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Problem 2.a: you need to implement this function&quot;&quot;&quot;</span>
 
         <span class="k">return</span>
 
-    <span class="k">def</span> <span class="nf">uniform_cost_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 1.c: you need to implement this function&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">uniform_cost_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">,</span> <span class="n">return_cost</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Problem 2.a: you need to implement this function&quot;&quot;&quot;</span>
 
         <span class="k">return</span>
 
-    <span class="k">def</span> <span class="nf">a_star_euclidian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 2: you need to implement this function&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">a_star_euclidian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">,</span> <span class="n">return_cost</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Problem 2.b: you need to implement this function&quot;&quot;&quot;</span>
         <span class="k">return</span>
 
     
-    <span class="k">def</span> <span class="nf">a_star_manhattan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 3: you need to implement this function&quot;&quot;&quot;</span>
-        <span class="k">return</span>
-    
-    <span class="k">def</span> <span class="nf">a_star_euclidian_probabilty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 4: you need to implement this function&quot;&quot;&quot;</span>
-        <span class="k">return</span>
-
-    <span class="k">def</span> <span class="nf">a_star_user_defined_h</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 5: you need to implement this function&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">a_star_manhattan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">,</span> <span class="n">return_cost</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Problem 2c: you need to implement this function&quot;&quot;&quot;</span>
         <span class="k">return</span>
 </pre></div>
 
@@ -305,12 +305,15 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span> 
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        `previous` is a dictionary chaining together the predecessor state that led to each state</span>
+
 <span class="sd">        `s` will be None for the initial state</span>
+
 <span class="sd">        otherwise, start from the last state `s` and recursively trace `previous` back to the initial state,</span>
 <span class="sd">        constructing a list of states visited as we go</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span> 
+        
         <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -319,9 +322,11 @@
 
         </details>
 
-            <div class="docstring"><p><code>previous</code> is a dictionary chaining together the predecessor state that led to each state
-<code>s</code> will be None for the initial state
-otherwise, start from the last state <code>s</code> and recursively trace <code>previous</code> back to the initial state,
+            <div class="docstring"><p><code>previous</code> is a dictionary chaining together the predecessor state that led to each state</p>
+
+<p><code>s</code> will be None for the initial state</p>
+
+<p>otherwise, start from the last state <code>s</code> and recursively trace <code>previous</code> back to the initial state,
 constructing a list of states visited as we go</p>
 </div>
 
@@ -338,9 +343,8 @@ constructing a list of states visited as we go</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">pathcost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">step_costs</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        add up the step costs along a path, which is assumed to be a list output from the `path` function above</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;add up the step costs along a path, which is assumed to be a list output from the `path` function above&quot;&quot;&quot;</span>
+        
         <span class="n">cost</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
             <span class="n">cost</span> <span class="o">+=</span> <span class="n">step_costs</span><span class="p">[</span><span class="n">path</span><span class="p">[</span><span class="n">s</span><span class="p">]][</span><span class="n">path</span><span class="p">[</span><span class="n">s</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
@@ -365,14 +369,19 @@ constructing a list of states visited as we go</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">breadth_first_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">,</span> <span class="n">return_cost</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39; find a shortest sequence of states from start to the goal &#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot; find a shortest sequence of states from start to the goal &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;calliing BFS&quot;</span><span class="p">)</span>
+        
         <span class="n">frontier</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([</span><span class="n">start</span><span class="p">])</span> <span class="c1"># doubly-ended queue of states</span>
         <span class="n">previous</span> <span class="o">=</span> <span class="p">{</span><span class="n">start</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>  <span class="c1"># start has no previous state; other states will</span>
+        
+        <span class="c1"># Return on start is goal</span>
         <span class="k">if</span> <span class="n">start</span> <span class="o">==</span> <span class="n">goal</span><span class="p">:</span>
             <span class="n">path_out</span> <span class="o">=</span> <span class="p">[</span><span class="n">start</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">return_cost</span><span class="p">:</span> <span class="k">return</span> <span class="n">path_out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathcost</span><span class="p">(</span><span class="n">path_out</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">path_out</span>
+
+        <span class="c1"># loop through frontine searching nodes until we find a goal</span>
         <span class="k">while</span> <span class="n">frontier</span><span class="p">:</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">frontier</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="n">state_graph</span><span class="p">[</span><span class="n">s</span><span class="p">]:</span>
@@ -383,6 +392,12 @@ constructing a list of states visited as we go</p>
                         <span class="n">path_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="n">previous</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">return_cost</span><span class="p">:</span> <span class="k">return</span> <span class="n">path_out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathcost</span><span class="p">(</span><span class="n">path_out</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">)</span>
                         <span class="k">return</span> <span class="n">path_out</span>
+        
+        <span class="c1"># no solution</span>
+        <span class="k">if</span> <span class="n">return_cost</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[],</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="k">return</span> <span class="p">[]</span>
 </pre></div>
 
         </details>
@@ -397,20 +412,20 @@ constructing a list of states visited as we go</p>
 
         
             <span class="def">def</span>
-            <span class="name">depth_first_search</span><span class="signature">(self, edge_weights)</span>:
+            <span class="name">depth_first_search</span><span class="signature">(self, start: tuple, goal, state_graph, return_cost=False)</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">depth_first_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 1.b: you need to implement this function&quot;&quot;&quot;</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">depth_first_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">,</span> <span class="n">return_cost</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Problem 2.a: you need to implement this function&quot;&quot;&quot;</span>
 
         <span class="k">return</span>
 </pre></div>
 
         </details>
 
-            <div class="docstring"><p>Problem 1.b: you need to implement this function</p>
+            <div class="docstring"><p>Problem 2.a: you need to implement this function</p>
 </div>
 
 
@@ -420,20 +435,20 @@ constructing a list of states visited as we go</p>
 
         
             <span class="def">def</span>
-            <span class="name">uniform_cost_search</span><span class="signature">(self, edge_weights)</span>:
+            <span class="name">uniform_cost_search</span><span class="signature">(self, start: tuple, goal, state_graph, return_cost=False)</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">uniform_cost_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 1.c: you need to implement this function&quot;&quot;&quot;</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">uniform_cost_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">,</span> <span class="n">return_cost</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Problem 2.a: you need to implement this function&quot;&quot;&quot;</span>
 
         <span class="k">return</span>
 </pre></div>
 
         </details>
 
-            <div class="docstring"><p>Problem 1.c: you need to implement this function</p>
+            <div class="docstring"><p>Problem 2.a: you need to implement this function</p>
 </div>
 
 
@@ -443,19 +458,19 @@ constructing a list of states visited as we go</p>
 
         
             <span class="def">def</span>
-            <span class="name">a_star_euclidian</span><span class="signature">(self, edge_weights)</span>:
+            <span class="name">a_star_euclidian</span><span class="signature">(self, start: tuple, goal, state_graph, return_cost=False)</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">a_star_euclidian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 2: you need to implement this function&quot;&quot;&quot;</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">a_star_euclidian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">,</span> <span class="n">return_cost</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Problem 2.b: you need to implement this function&quot;&quot;&quot;</span>
         <span class="k">return</span>
 </pre></div>
 
         </details>
 
-            <div class="docstring"><p>Problem 2: you need to implement this function</p>
+            <div class="docstring"><p>Problem 2.b: you need to implement this function</p>
 </div>
 
 
@@ -465,63 +480,19 @@ constructing a list of states visited as we go</p>
 
         
             <span class="def">def</span>
-            <span class="name">a_star_manhattan</span><span class="signature">(self, edge_weights)</span>:
+            <span class="name">a_star_manhattan</span><span class="signature">(self, start: tuple, goal, state_graph, return_cost=False)</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">a_star_manhattan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 3: you need to implement this function&quot;&quot;&quot;</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">a_star_manhattan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">goal</span><span class="p">,</span> <span class="n">state_graph</span><span class="p">,</span> <span class="n">return_cost</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Problem 2c: you need to implement this function&quot;&quot;&quot;</span>
         <span class="k">return</span>
 </pre></div>
 
         </details>
 
-            <div class="docstring"><p>Problem 3: you need to implement this function</p>
-</div>
-
-
-                            </div>
-                            <div id="PathSolver.a_star_euclidian_probabilty" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#PathSolver.a_star_euclidian_probabilty">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">a_star_euclidian_probabilty</span><span class="signature">(self, edge_weights)</span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">a_star_euclidian_probabilty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 4: you need to implement this function&quot;&quot;&quot;</span>
-        <span class="k">return</span>
-</pre></div>
-
-        </details>
-
-            <div class="docstring"><p>Problem 4: you need to implement this function</p>
-</div>
-
-
-                            </div>
-                            <div id="PathSolver.a_star_user_defined_h" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#PathSolver.a_star_user_defined_h">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">a_star_user_defined_h</span><span class="signature">(self, edge_weights, h)</span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">a_star_user_defined_h</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Problem 5: you need to implement this function&quot;&quot;&quot;</span>
-        <span class="k">return</span>
-</pre></div>
-
-        </details>
-
-            <div class="docstring"><p>Problem 5: you need to implement this function</p>
+            <div class="docstring"><p>Problem 2c: you need to implement this function</p>
 </div>
 
 
